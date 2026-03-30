@@ -34,6 +34,8 @@ export interface AssessmentItem {
   options: Option[];
   legal: string;
   industries: string[];
+  alwaysShow: boolean;   // trueなら業界・ユースケースに関係なく常に表示
+  targetScore: number;   // 推奨レベル（100=必須, 66=推奨, 33=将来検討）
   insight: Insight;
 }
 

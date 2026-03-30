@@ -9,12 +9,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIの出力に実在しないデータや間違った数字が含まれるリスクへの対策は？",
     options: [
-      { oid: "B1a", label: "必ず人間が全件確認", score: 100 },
-      { oid: "B1b", label: "重要なものだけ確認", score: 50 },
-      { oid: "B1c", label: "そのまま使うことが多い", score: 0 },
+      { oid: "B1a", label: "出力に情報源を強制表示し全件人間確認", score: 100 },
+      { oid: "B1b", label: "重要な出力は人間が確認するルール", score: 66 },
+      { oid: "B1c", label: "注意喚起はしているが徹底されていない", score: 33 },
+      { oid: "B1d", label: "そのまま使うことが多い", score: 0 },
     ],
     legal: "AI事業者GL・会社法",
     industries: ["all"],
+    alwaysShow: true,
+    targetScore: 100,
     insight: {
       risk: "AIは事実と異なる情報をもっともらしく生成する（ハルシネーション）。買収候補リストに実在しない企業が含まれたり、財務データに誤りがあると判断を誤る。取締役の善管注意義務の観点からも問題。AI事業者GLでも出力の正確性確認が求められている。",
       action:
@@ -52,13 +55,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIの出力をクライアントに見せるとき、別案件の情報が混ざっていないか確認していますか？",
     options: [
-      { oid: "B2a", label: "社外に出す前に必ずチェック", score: 100 },
-      { oid: "B2b", label: "社外に出さない", score: 75 },
-      { oid: "B2c", label: "人によってはそのまま出す", score: 25 },
+      { oid: "B2a", label: "出力フローに機密情報チェックを自動化", score: 100 },
+      { oid: "B2b", label: "社外提出前に必ず人間がチェック", score: 66 },
+      { oid: "B2c", label: "チェックルールはあるが徹底されていない", score: 33 },
       { oid: "B2d", label: "考えたことがない", score: 0 },
     ],
     legal: "金商法167条の2",
     industries: ["ma", "finance"],
+    alwaysShow: false,
+    targetScore: 100,
     insight: {
       risk: "AIが作った資料にA案件の未公開情報が混入しそれをB案件のクライアントに見せると金商法の情報伝達規制に抵触するリスク。AIのコンテキスト保持やメモリ機能により、意図せず別案件の情報が混入する可能性がある。",
       action:
@@ -96,24 +101,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIが「見送り」と判断したとき、人間が改めて判断していますか？",
     options: [
-      {
-        oid: "B3a",
-        label: "必ず人間が最終判断するルールがある",
-        score: 100,
-      },
-      {
-        oid: "B3b",
-        label: "暗黙の了解だが明文化されていない",
-        score: 50,
-      },
-      {
-        oid: "B3c",
-        label: "AIの判断をそのまま使うこともある",
-        score: 0,
-      },
+      { oid: "B3a", label: "判断記録システムで人間判断の証跡を保存", score: 100 },
+      { oid: "B3b", label: "最終判断は人間が行うルールを明文化", score: 66 },
+      { oid: "B3c", label: "暗黙の了解だが明文化されていない", score: 33 },
+      { oid: "B3d", label: "AIの判断をそのまま使うこともある", score: 0 },
     ],
     legal: "AI事業者GL・会社法",
     industries: ["all"],
+    alwaysShow: true,
+    targetScore: 100,
     insight: {
       risk: "AIの判断をそのまま採用して有望な案件を逃すリスク。取締役の善管注意義務の観点からAI判断への過度な依存は問題になり得る。AI事業者GLでも重要な判断への人間の介在が求められている。",
       action:
@@ -150,13 +146,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIの出力に個人名や連絡先がそのまま含まれるリスクへの対策は？",
     options: [
-      { oid: "B4a", label: "出力時に自動除去", score: 100 },
-      { oid: "B4b", label: "目視で確認して除去", score: 50 },
-      { oid: "B4c", label: "確認していない", score: 5 },
-      { oid: "B4d", label: "考えたことがない", score: 0 },
+      { oid: "B4a", label: "出力時にPIIを自動マスキング", score: 100 },
+      { oid: "B4b", label: "社外提出前に目視で個人情報を確認・除去", score: 66 },
+      { oid: "B4c", label: "注意喚起はしている", score: 33 },
+      { oid: "B4d", label: "確認していない", score: 0 },
     ],
     legal: "個情法",
     industries: ["all"],
+    alwaysShow: false,
+    targetScore: 100,
     insight: {
       risk: "AIが作った資料に入力時の個人名や連絡先がそのまま出力されるリスク。これを社外に出すと個人情報の漏洩。個情法の安全管理措置違反にも該当し得る。",
       action:
@@ -194,12 +192,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIの出力に他社レポートの文章がそのまま含まれるリスクへの対策は？",
     options: [
-      { oid: "B5a", label: "著作権チェックをしている", score: 100 },
-      { oid: "B5b", label: "確認していない", score: 5 },
-      { oid: "B5c", label: "何が問題かわからない", score: 0 },
+      { oid: "B5a", label: "著作権チェックツールで自動検知", score: 100 },
+      { oid: "B5b", label: "元ソースとの類似性を確認するプロセスあり", score: 66 },
+      { oid: "B5c", label: "注意喚起はしている", score: 33 },
+      { oid: "B5d", label: "確認していない", score: 0 },
     ],
     legal: "著作権法",
     industries: ["all"],
+    alwaysShow: false,
+    targetScore: 66,
     insight: {
       risk: "AIが他社レポートや記事の文章をほぼそのまま出力する場合がある。クライアントに提出すると著作権侵害のリスク。特定のクリエイターや作品名をプロンプトに入れた場合は依拠性が認められやすい。",
       action:
@@ -236,16 +237,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIで作った資料をクライアントに出すとき、AIを使ったことを伝えていますか？",
     options: [
-      { oid: "B6a", label: "「AI利用」と明記", score: 100 },
-      {
-        oid: "B6b",
-        label: "人間で最終化するので明記していない",
-        score: 50,
-      },
-      { oid: "B6c", label: "考えたことがない", score: 0 },
+      { oid: "B6a", label: "AI生成にコンテンツ認証メカニズムを導入", score: 100 },
+      { oid: "B6b", label: "AI生成資料に「AI利用」と明記", score: 66 },
+      { oid: "B6c", label: "人間で最終化するので明記していない", score: 33 },
+      { oid: "B6d", label: "考えたことがない", score: 0 },
     ],
     legal: "AI事業者GL",
     industries: ["all"],
+    alwaysShow: true,
+    targetScore: 33,
     insight: {
       risk: "AI事業者GLではAI生成コンテンツの開示が推奨。EU AI Actではチャットボット等に透明性義務（AIであることの開示）。現時点で日本は法的義務ではないが今後規制強化の可能性。",
       action:
@@ -282,16 +282,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIが不適切な表現や差別的な内容を含む回答を生成するリスクへの対策は？",
     options: [
-      { oid: "B7a", label: "コンテンツフィルターを設定済", score: 100 },
-      {
-        oid: "B7b",
-        label: "ベンダーのデフォルト設定のまま",
-        score: 50,
-      },
-      { oid: "B7c", label: "確認していない", score: 0 },
+      { oid: "B7a", label: "カスタムフィルターで業界固有の不適切表現も検知", score: 100 },
+      { oid: "B7b", label: "ベンダーのコンテンツフィルター設定を最適化済み", score: 66 },
+      { oid: "B7c", label: "デフォルト設定のまま利用", score: 33 },
+      { oid: "B7d", label: "確認していない", score: 0 },
     ],
     legal: "各ベンダーAUP",
     industries: ["all"],
+    alwaysShow: false,
+    targetScore: 66,
     insight: {
       risk: "AIが不適切な表現や差別的な内容を含む回答を顧客に返すリスク。特に顧客対応やコンテンツ生成で問題になる。レピュテーションリスクにも直結。",
       action:
@@ -329,16 +328,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIが生成した企業価値算定や財務数値に重大な誤りがあるリスクへの対策は？",
     options: [
-      {
-        oid: "B8a",
-        label: "AI出力の数値は全て人間が検証",
-        score: 100,
-      },
-      { oid: "B8b", label: "重要な数値のみ検証", score: 50 },
-      { oid: "B8c", label: "そのまま利用", score: 0 },
+      { oid: "B8a", label: "形式論理検証ツールで数値の正確性を自動検証", score: 100 },
+      { oid: "B8b", label: "AI出力の数値は必ず人間がExcel等で再計算", score: 66 },
+      { oid: "B8c", label: "重要な数値のみ確認", score: 33 },
+      { oid: "B8d", label: "そのまま利用している", score: 0 },
     ],
     legal: "金商法・会社法・東証規程",
     industries: ["ma", "finance"],
+    alwaysShow: false,
+    targetScore: 100,
     insight: {
       risk: "AIが生成したバリュエーションに重大な誤り（ハルシネーション・計算ミス）が含まれるリスク。TOB価格の算定根拠としてAI出力を使う場合、公開買付届出書の記載内容の正確性が問われる。DCF法の前提条件の開示が拡充されており（2025年東証規程改正）、AI生成数値の検証が重要。",
       action:
@@ -375,16 +373,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIによる契約書レビューでCoC条項やMAC条項等の重要条項を見落とすリスクへの対策は？",
     options: [
-      {
-        oid: "B9a",
-        label: "AIレビュー後に必ず弁護士が確認",
-        score: 100,
-      },
-      { oid: "B9b", label: "重要契約のみ弁護士確認", score: 50 },
-      { oid: "B9c", label: "AIレビューをそのまま利用", score: 0 },
+      { oid: "B9a", label: "法律特化AIツール+弁護士の二重体制", score: 100 },
+      { oid: "B9b", label: "AIレビュー後に必ず弁護士が確認", score: 66 },
+      { oid: "B9c", label: "重要契約のみ弁護士確認", score: 33 },
+      { oid: "B9d", label: "AIレビューをそのまま利用", score: 0 },
     ],
     legal: "会社法・金商法",
     industries: ["ma", "finance"],
+    alwaysShow: false,
+    targetScore: 100,
     insight: {
       risk: "AIが契約書レビューでCoC条項（チェンジオブコントロール条項）やMAC条項等の重要条項を見落とすリスク。M&Aでは契約条項の見落としが取引の成否に直結。AIは長文の法的文書の全体構造を見落とすことがある。",
       action:
@@ -421,16 +418,15 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AI生成コンテンツが人間が作成したものと誤認されるリスクへの対策は？",
     options: [
-      {
-        oid: "B10a",
-        label: "AI生成の識別メカニズムがある",
-        score: 100,
-      },
-      { oid: "B10b", label: "手動でラベル付け", score: 50 },
-      { oid: "B10c", label: "特に対策していない", score: 0 },
+      { oid: "B10a", label: "C2PA等のコンテンツ認証技術を導入", score: 100 },
+      { oid: "B10b", label: "AI生成物にメタデータとして自動記録", score: 66 },
+      { oid: "B10c", label: "手動でラベル付け", score: 33 },
+      { oid: "B10d", label: "特に対策していない", score: 0 },
     ],
     legal: "AI事業者GL + 広島AIプロセス",
     industries: ["all"],
+    alwaysShow: false,
+    targetScore: 33,
     insight: {
       risk: "AI生成コンテンツが人間作成と誤認されるリスク。広島AIプロセスの国際行動規範でもコンテンツ認証メカニズムの導入が求められている。AI事業者GLでもAI生成物の透明性確保が共通指針。",
       action:

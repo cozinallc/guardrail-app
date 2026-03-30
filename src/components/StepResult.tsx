@@ -182,7 +182,7 @@ export default function StepResult({
           <RadarChart
             labels={items.map((i) => i.title)}
             data={items.map((i) => getItemScore(i, answers))}
-            target={items.map(() => 100)}
+            target={items.map((i) => i.targetScore)}
           />
         </div>
 

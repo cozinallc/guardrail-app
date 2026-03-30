@@ -21,7 +21,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!profile.industry) return;
-    const filtered = getFilteredItems(profile.industry);
+    const filtered = getFilteredItems(profile.industry, profile.useCases);
     const boosted = applyBoost(filtered, profile.useCases);
     setItems(boosted);
   }, [profile.industry, profile.useCases]);

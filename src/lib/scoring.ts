@@ -1,9 +1,32 @@
 import { AssessmentItem, AssessmentItemWithBoost, AreaScore } from "@/types";
 import { ITEMS, UC_BOOST, AREAS } from "@/data/items";
 
-export function getFilteredItems(industry: string): AssessmentItem[] {
-  return ITEMS.filter(
+/**
+ * 業界 + ユースケースで項目をフィルタリング
+ * - 業界に該当する項目のうち
+ * - alwaysShow=true の項目は常に表示
+ * - それ以外はUC_BOOSTでマッチした項目のみ表示
+ */
+export function getFilteredItems(
+  industry: string,
+  useCases: string
+): AssessmentItem[] {
+  // 業界フィルタ
+  const industryFiltered = ITEMS.filter(
     (i) => i.industries.includes("all") || i.industries.includes(industry)
+  );
+
+  // ユースケースからブースト対象IDを取得
+  const boostedIds = new Set<string>();
+  if (useCases) {
+    Object.entries(UC_BOOST).forEach(([kw, ids]) => {
+      if (useCases.includes(kw)) ids.forEach((id) => boostedIds.add(id));
+    });
+  }
+
+  // alwaysShow=true OR ブースト対象の項目のみ返す
+  return industryFiltered.filter(
+    (i) => i.alwaysShow || boostedIds.has(i.id)
   );
 }
 

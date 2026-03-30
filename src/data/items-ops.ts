@@ -9,13 +9,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "問題が起きたとき「誰がいつ何をAIに聞いたか」を確認できますか？",
     options: [
-      { oid: "C1-a", label: "ログ管理ツールで記録", score: 100 },
-      { oid: "C1-b", label: "ChatGPT/Copilotの履歴で十分", score: 50 },
-      { oid: "C1-c", label: "記録を残していない", score: 5 },
-      { oid: "C1-d", label: "考えたことがない", score: 0 },
+      { oid: "C1-a", label: "全入出力を自動記録しSIEM連携で長期保管", score: 100 },
+      { oid: "C1-b", label: "エージェント経由で自動記録", score: 66 },
+      { oid: "C1-c", label: "ChatGPT/Copilotの履歴に依存", score: 33 },
+      { oid: "C1-d", label: "記録を残していない", score: 0 },
     ],
     legal: "AI事業者GL・金商法",
     industries: ["all"],
+    alwaysShow: true,
+    targetScore: 66,
     insight: {
       risk: "AIインシデント発生時に「誰がいつ何を入力しAIが何を出力したか」の記録がないと原因究明も対応もできない。金商法上の監査対応でもAI利用ログの提出を求められる可能性がある。",
       action:
@@ -55,13 +57,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "案件終了後、AIに入れた対象企業の情報を削除していますか？",
     options: [
-      { oid: "C2-a", label: "削除するルールがある", score: 100 },
-      { oid: "C2-b", label: "気づいたら削除", score: 25 },
-      { oid: "C2-c", label: "削除していない", score: 5 },
-      { oid: "C2-d", label: "考えたことがない", score: 0 },
+      { oid: "C2-a", label: "案件別エージェントごと削除で完全データクリア", score: 100 },
+      { oid: "C2-b", label: "管理コンソールから定期的に履歴削除", score: 66 },
+      { oid: "C2-c", label: "削除するルールはあるが手動", score: 33 },
+      { oid: "C2-d", label: "削除していない", score: 0 },
     ],
     legal: "NDA・個情法",
     industries: ["ma", "finance"],
+    alwaysShow: false,
+    targetScore: 100,
     insight: {
       risk: "案件終了後もAIにDD資料や対象企業情報が残っていると別案件への情報混入リスク。NDA上の守秘義務違反にもなり得る。特にChatGPTのメモリ機能が有効な場合、過去の入力情報が長期間保持される。",
       action:
@@ -101,13 +105,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "従業員が個人のChatGPTアカウントで業務データを使うリスクへの対策は？",
     options: [
-      { oid: "C3-a", label: "技術的にブロック", score: 100 },
-      { oid: "C3-b", label: "禁止ルールがあり周知", score: 50 },
-      { oid: "C3-c", label: "管理していない", score: 5 },
-      { oid: "C3-d", label: "わからない", score: 0 },
+      { oid: "C3-a", label: "ネットワークレベルで非承認AIをブロック", score: 100 },
+      { oid: "C3-b", label: "利用状況モニタリングを実施", score: 66 },
+      { oid: "C3-c", label: "禁止ルールを策定し周知", score: 33 },
+      { oid: "C3-d", label: "管理していない", score: 0 },
     ],
     legal: "不競法・個情法",
     industries: ["all"],
+    alwaysShow: true,
+    targetScore: 66,
     insight: {
       risk: "従業員が個人のChatGPTアカウントで業務データを処理するとトレーニングデータに使われるリスクがあり会社の管理が及ばない。コンシューマープランでは入力データがトレーニングに使われるのがデフォルト。",
       action: "会社が認めたAI以外の利用を禁止するルールを周知。",
@@ -146,12 +152,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "AIが機密情報を含む回答をしたら、誰に報告してどう対応しますか？",
     options: [
-      { oid: "C4-a", label: "対応手順が整備されている", score: 100 },
-      { oid: "C4-b", label: "都度対応する", score: 25 },
-      { oid: "C4-c", label: "考えたことがない", score: 0 },
+      { oid: "C4-a", label: "自動検知・通知・記録のシステムを構築", score: 100 },
+      { oid: "C4-b", label: "対応手順・報告テンプレート・エスカレーションルートを整備", score: 66 },
+      { oid: "C4-c", label: "対応手順を文書化", score: 33 },
+      { oid: "C4-d", label: "考えたことがない", score: 0 },
     ],
     legal: "AI事業者GL",
     industries: ["all"],
+    alwaysShow: true,
+    targetScore: 66,
     insight: {
       risk: "AIが機密情報を含む回答をしてしまった場合、対応手順がないと初動が遅れ被害が拡大。AI事業者GLでもインシデント対応の整備が求められている。",
       action:
@@ -190,13 +199,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "経営層が関与してAI利用方針やリスク管理を統括する体制はありますか？",
     options: [
-      { oid: "C5-a", label: "経営層が関与した体制がある", score: 100 },
-      { oid: "C5-b", label: "担当者はいるが経営層未関与", score: 50 },
-      { oid: "C5-c", label: "体制はない", score: 5 },
-      { oid: "C5-d", label: "わからない", score: 0 },
+      { oid: "C5-a", label: "AIガバナンス委員会を設置しフレームワークを導入", score: 100 },
+      { oid: "C5-b", label: "経営層が定期的にAI利用状況をレビュー", score: 66 },
+      { oid: "C5-c", label: "担当者はいるが経営層は未関与", score: 33 },
+      { oid: "C5-d", label: "体制はない", score: 0 },
     ],
     legal: "AI事業者GL",
     industries: ["all"],
+    alwaysShow: true,
+    targetScore: 66,
     insight: {
       risk: "経営層がAI利用のリスクを把握していないとインシデント発生時に適切な判断ができない。AI事業者GLでも経営層の関与が求められている。アカウンタビリティの確保が共通指針の一つ。",
       action:
@@ -235,12 +246,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "AIの利用ルールやベンダーポリシーは頻繁に変わります。定期的に見直していますか？",
     options: [
-      { oid: "C6-a", label: "定期的に見直している", score: 100 },
-      { oid: "C6-b", label: "作ったきり見直していない", score: 25 },
-      { oid: "C6-c", label: "ルール自体がない", score: 0 },
+      { oid: "C6-a", label: "コンプライアンスツールで変更を自動モニタリング", score: 100 },
+      { oid: "C6-b", label: "四半期ごとに担当者がポリシー変更を確認", score: 66 },
+      { oid: "C6-c", label: "見直しの必要性は認識しているが不定期", score: 33 },
+      { oid: "C6-d", label: "ルール自体がない", score: 0 },
     ],
     legal: "AI事業者GL",
     industries: ["all"],
+    alwaysShow: true,
+    targetScore: 66,
     insight: {
       risk: "AIサービスの利用規約やベンダーポリシーは頻繁に変更される。ルールを作ったまま見直さないと気づかないうちに規約違反や法令違反になるリスク。",
       action:
@@ -279,12 +293,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "権限のない従業員が自由にAIを利用し、機密情報にアクセスするリスクへの対策は？",
     options: [
-      { oid: "C7-a", label: "役割ベースのアクセス制御を設計済", score: 100 },
-      { oid: "C7-b", label: "全員同じ権限で利用", score: 50 },
-      { oid: "C7-c", label: "アクセス管理をしていない", score: 0 },
+      { oid: "C7-a", label: "IAM/RBAC連携で全AIアクセスを統合管理", score: 100 },
+      { oid: "C7-b", label: "役割ベースのアクセス制御を設計済み", score: 66 },
+      { oid: "C7-c", label: "利用者の範囲は決めているが技術的制御なし", score: 33 },
+      { oid: "C7-d", label: "アクセス管理をしていない", score: 0 },
     ],
     legal: "Bedrock IAM・Azure RBAC",
     industries: ["all"],
+    alwaysShow: false,
+    targetScore: 66,
     insight: {
       risk: "権限のない従業員が自由にAIを利用し機密情報にアクセスするリスク。特にRAGで社内文書を参照するAIの場合、アクセス権限の設計が不十分だとNeed to Know原則が崩壊。",
       action:
@@ -324,12 +341,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "利用中のAIベンダーの利用規約を読んで、遵守すべきルールを把握していますか？",
     options: [
-      { oid: "C8-a", label: "規約を確認し遵守ルールを社内に展開済", score: 100 },
-      { oid: "C8-b", label: "規約を読んだことはある", score: 50 },
-      { oid: "C8-c", label: "読んだことがない", score: 0 },
+      { oid: "C8-a", label: "コンプライアンスツールでAUP違反を自動検知", score: 100 },
+      { oid: "C8-b", label: "AUP遵守チェックリストで定期確認", score: 66 },
+      { oid: "C8-c", label: "規約を読んだことはある", score: 33 },
+      { oid: "C8-d", label: "読んだことがない", score: 0 },
     ],
     legal: "各ベンダーAUP",
     industries: ["all"],
+    alwaysShow: false,
+    targetScore: 66,
     insight: {
       risk: "AIベンダーの利用規約（AUP）を確認していないと、知らないうちに規約違反でアカウント停止や法的措置のリスク。特にジェイルブレイク、蒸留、リバースエンジニアリングの禁止は認識されていないことが多い。",
       action:
@@ -368,12 +388,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "AIのリスクを特定・評価せずに導入し、想定外の問題が発生するリスクへの対策は？",
     options: [
-      { oid: "C9-a", label: "リスクアセスメントを実施済", score: 100 },
-      { oid: "C9-b", label: "一部のリスクは検討した", score: 50 },
-      { oid: "C9-c", label: "実施していない", score: 0 },
+      { oid: "C9-a", label: "国際フレームワーク（NIST AI RMF等）で包括的評価", score: 100 },
+      { oid: "C9-b", label: "リスクアセスメントフレームワークを導入し定期実施", score: 66 },
+      { oid: "C9-c", label: "一部のリスクは検討した", score: 33 },
+      { oid: "C9-d", label: "実施していない", score: 0 },
     ],
     legal: "AI事業者GL",
     industries: ["all"],
+    alwaysShow: false,
+    targetScore: 66,
     insight: {
       risk: "AIのリスクを特定・評価せずに導入すると想定外の問題が発生。AI事業者GLではリスクベースの対策実施が求められている。業界・ユースケースに応じたリスクプロファイルの作成が重要。",
       action:
@@ -412,12 +435,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "AIベンダーとの契約でデータ利用・知的財産の帰属が曖昧なまま利用していませんか？",
     options: [
-      { oid: "C10-a", label: "契約をチェックリストで確認済", score: 100 },
-      { oid: "C10-b", label: "契約は結んでいるが詳細未確認", score: 50 },
-      { oid: "C10-c", label: "確認していない", score: 0 },
+      { oid: "C10-a", label: "リーガルテックツールで契約条項を自動チェック", score: 100 },
+      { oid: "C10-b", label: "経産省チェックリストで契約を確認済み", score: 66 },
+      { oid: "C10-c", label: "契約は結んでいるが詳細未確認", score: 33 },
+      { oid: "C10-d", label: "確認していない", score: 0 },
     ],
     legal: "経産省契約CL",
     industries: ["all"],
+    alwaysShow: false,
+    targetScore: 66,
     insight: {
       risk: "AIベンダーとの契約でデータ利用・知的財産・IPの帰属が曖昧なまま利用するリスク。経産省「AIの利用・開発に関する契約チェックリスト」（2025年2月公表）で契約上のチェックポイントが整理されている。",
       action:
@@ -456,12 +482,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "AIによる反社チェックで問題企業を見落とすリスクへの対策は？",
     options: [
-      { oid: "C11-a", label: "AI結果を必ず人間が検証", score: 100 },
-      { oid: "C11-b", label: "AIで反社チェックはしていない", score: 50 },
-      { oid: "C11-c", label: "AIの結果をそのまま利用", score: 25 },
+      { oid: "C11-a", label: "専用反社チェックツール+AIの二重体制", score: 100 },
+      { oid: "C11-b", label: "AI結果を必ず人間が検証", score: 66 },
+      { oid: "C11-c", label: "AIの反社チェック結果をそのまま利用", score: 33 },
+      { oid: "C11-d", label: "AIで反社チェックはしていない", score: 0 },
     ],
     legal: "犯収法",
     industries: ["ma", "finance"],
+    alwaysShow: false,
+    targetScore: 100,
     insight: {
       risk: "AIによる反社チェックで偽陰性（問題企業を見落とす）が出るリスク。M&Aでは反社勢力との取引が契約解除・レピュテーションリスクに直結。制裁対象者リストの最新性がAIの学習データの鮮度に依存する問題もある。",
       action:
@@ -500,12 +529,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "クロスボーダーM&Aで外為法の事前届出業種の該当判定をAIに依存していませんか？",
     options: [
-      { oid: "C12-a", label: "AIは参考にし最終判定は専門家", score: 100 },
-      { oid: "C12-b", label: "AI判定をそのまま利用", score: 25 },
-      { oid: "C12-c", label: "外為法を意識していない", score: 0 },
+      { oid: "C12-a", label: "規制テックツールで最新規制を自動反映", score: 100 },
+      { oid: "C12-b", label: "AIは参考にし最終判定は専門家が実施", score: 66 },
+      { oid: "C12-c", label: "AIの判定を参考にしている", score: 33 },
+      { oid: "C12-d", label: "外為法を意識していない", score: 0 },
     ],
     legal: "外為法",
     industries: ["ma"],
+    alwaysShow: false,
+    targetScore: 100,
     insight: {
       risk: "事前届出業種（武器・原子力・航空宇宙・サイバーセキュリティ等）の該当判定をAIが誤るリスク。2019年改正で対象業種が拡大（コア業種+上乗せ規制）しており、AIが最新の対象業種を正しく把握しているかが問題。届出漏れは中止命令のリスク。",
       action:
@@ -544,16 +576,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "M&Aの意思決定で「AIが出した結果」と「取締役が判断した結果」の記録は分離されていますか？",
     options: [
-      { oid: "C13-a", label: "AI出力と人間判断を明確に分離記録", score: 100 },
-      {
-        oid: "C13-b",
-        label: "議事録には残しているが明確に分離していない",
-        score: 50,
-      },
-      { oid: "C13-c", label: "特に記録していない", score: 0 },
+      { oid: "C13-a", label: "意思決定支援システムで判断プロセスを完全記録", score: 100 },
+      { oid: "C13-b", label: "AI出力と人間判断を明確に分離記録", score: 66 },
+      { oid: "C13-c", label: "議事録には残しているが分離していない", score: 33 },
+      { oid: "C13-d", label: "特に記録していない", score: 0 },
     ],
     legal: "会社法・公正M&A指針",
     industries: ["ma"],
+    alwaysShow: false,
+    targetScore: 100,
     insight: {
       risk: "取締役の善管注意義務としてAI判断への過度な依存が問題となる可能性。「AIが出した結果」ではなく「取締役が判断した結果」であることの記録が重要。特別委員会が株式価値算定を検証する際のAI関与の透明性確保も必要。",
       action:
@@ -592,12 +623,15 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "EU域内にサービスを提供する場合やグループ会社がEU域内にある場合、EU AI Actの適用を確認していますか？",
     options: [
-      { oid: "C14-a", label: "域外適用の該当性を確認済", score: 100 },
-      { oid: "C14-b", label: "認識はしているが未確認", score: 50 },
-      { oid: "C14-c", label: "EU AI Actを知らない", score: 0 },
+      { oid: "C14-a", label: "規制テックツールでEU AI Actコンプライアンスを自動チェック", score: 100 },
+      { oid: "C14-b", label: "域外適用の該当性を法務部門と確認済み", score: 66 },
+      { oid: "C14-c", label: "認識はしているが未確認", score: 33 },
+      { oid: "C14-d", label: "EU AI Actを知らない", score: 0 },
     ],
     legal: "EU AI Act 2条",
     industries: ["all"],
+    alwaysShow: false,
+    targetScore: 33,
     insight: {
       risk: "EU AI Actは域外適用があり、EU域内にサービスを提供する場合やAI出力がEU域内で利用されるだけでも適用対象。EU域内のグループ会社が利用する場合も対象。制裁金は最大で全世界年間売上高の7%または3,500万ユーロ。",
       action:
