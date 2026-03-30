@@ -6,10 +6,24 @@ export interface Option {
   score: number;
 }
 
+export interface RoadmapLevel {
+  do: string;        // 具体的にやること
+  stops: string;     // 止められるもの
+  cantStop: string;  // 止められないもの
+}
+
+export interface Roadmap {
+  lv1: RoadmapLevel; // ルール
+  lv2: RoadmapLevel; // 環境制限
+  lv3: RoadmapLevel; // エージェント化
+  lv4: RoadmapLevel; // 専用製品
+}
+
 export interface Insight {
   risk: string;
   action: string;
   agent: string | null;
+  roadmap: Roadmap;
 }
 
 export interface AssessmentItem {

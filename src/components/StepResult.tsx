@@ -291,6 +291,33 @@ export default function StepResult({
                           </div>
                         )}
 
+                        {/* 4段階ロードマップ */}
+                        {score < 75 && item.insight?.roadmap && (
+                          <div className="mt-3 border border-slate-200 rounded-lg overflow-hidden">
+                            <div className="bg-slate-50 px-3 py-2">
+                              <span className="text-[11px] font-semibold text-slate-700">4段階ロードマップ</span>
+                            </div>
+                            {[
+                              { key: "lv1" as const, label: "Lv.1 ルール", color: "#dc2626", bg: "#fef2f2" },
+                              { key: "lv2" as const, label: "Lv.2 環境制限", color: "#d97706", bg: "#fffbeb" },
+                              { key: "lv3" as const, label: "Lv.3 エージェント", color: "#059669", bg: "#ecfdf5" },
+                              { key: "lv4" as const, label: "Lv.4 専用製品", color: "#7c3aed", bg: "#f5f3ff" },
+                            ].map((lv) => {
+                              const rm = item.insight.roadmap[lv.key];
+                              return (
+                                <div key={lv.key} className="border-t border-slate-100 px-3 py-2">
+                                  <div className="text-[10px] font-semibold mb-1" style={{ color: lv.color }}>{lv.label}</div>
+                                  <div className="text-xs text-slate-600 leading-relaxed">{rm.do}</div>
+                                  <div className="flex gap-3 mt-1">
+                                    <span className="text-[10px] text-emerald-700">止められる: {rm.stops}</span>
+                                    <span className="text-[10px] text-red-600">限界: {rm.cantStop}</span>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
                         <div className="text-[10px] text-slate-400 mt-2">
                           {item.legal}
                         </div>
