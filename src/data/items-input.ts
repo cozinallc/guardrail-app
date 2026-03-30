@@ -9,15 +9,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "ノンネームシートや資料に含まれる人名・連絡先を、そのままAIに入れてしまうリスクへの対策は？",
     options: [
-      { oid: "A1a", label: "入力時にPIIを自動検知・ブロックしている", score: 100 },
-      { oid: "A1b", label: "トレーニング利用OFF等の環境設定で対策", score: 66 },
-      { oid: "A1c", label: "入力禁止ルールを策定し周知済み", score: 33 },
-      { oid: "A1d", label: "対策していない", score: 0 },
+      { oid: "A1a", label: "入力時にPIIを自動検知・ブロックしている", level: 3 },
+      { oid: "A1b", label: "トレーニング利用OFF等の環境設定で対策", level: 2 },
+      { oid: "A1c", label: "入力禁止ルールを策定し周知済み", level: 1 },
+      { oid: "A1d", label: "対策していない", level: 0 },
     ],
     legal: "個情法27・28・23条",
     industries: ["all"],
     alwaysShow: true,
-    targetScore: 100,
     insight: {
       risk: "個人情報がAIベンダーに渡ると個情法上の第三者提供に該当し得る。海外ベンダーの場合は越境移転規制(28条)も適用。ベンダーがトレーニングに利用する場合は「提供」に該当し行政処分・罰金の対象。個人情報保護委員会からの是正勧告リスクもある。",
       action:
@@ -58,15 +57,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "まだ公表されていない買収計画や対象企業の情報をAIに入れることへの対策は？",
     options: [
-      { oid: "A2a", label: "案件別環境で構造的に分離し入力制御", score: 100 },
-      { oid: "A2b", label: "Businessプランでトレーニング利用OFF・メモリOFF", score: 66 },
-      { oid: "A2c", label: "研修で周知している", score: 33 },
-      { oid: "A2d", label: "対策していない", score: 0 },
+      { oid: "A2a", label: "案件別環境で構造的に分離し入力制御", level: 3 },
+      { oid: "A2b", label: "Businessプランでトレーニング利用OFF・メモリOFF", level: 2 },
+      { oid: "A2c", label: "研修で周知している", level: 1 },
+      { oid: "A2d", label: "対策していない", level: 0 },
     ],
     legal: "金商法166条・167条の2",
     industries: ["ma", "finance"],
     alwaysShow: false,
-    targetScore: 100,
     insight: {
       risk: "未公開の買収計画や業績予想をAIに入力するとベンダー側にデータが渡る。ベンダー従業員がアクセスできる状態なら金商法上の「第一次情報受領者」に該当し得る。AI出力に未公開情報が混入し社外に出た場合、情報伝達規制(167条の2)に抵触。違反時は5年以下の懲役または500万円以下の罰金、法人は最大5億円。",
       action:
@@ -108,15 +106,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "A案件で入れた情報がB案件の回答に混ざるリスクへの対策は？",
     options: [
-      { oid: "A3a", label: "案件ごとに完全に分離した環境", score: 100 },
-      { oid: "A3b", label: "案件ごとに別アカウント・メモリOFF", score: 66 },
-      { oid: "A3c", label: "案件ごとに別スレッドで運用", score: 33 },
-      { oid: "A3d", label: "特に分けていない", score: 0 },
+      { oid: "A3a", label: "案件ごとに完全に分離した環境", level: 3 },
+      { oid: "A3b", label: "案件ごとに別アカウント・メモリOFF", level: 2 },
+      { oid: "A3c", label: "案件ごとに別スレッドで運用", level: 1 },
+      { oid: "A3d", label: "特に分けていない", level: 0 },
     ],
     legal: "金商法166条",
     industries: ["ma", "finance"],
     alwaysShow: false,
-    targetScore: 100,
     insight: {
       risk: "同じAIアカウントで複数案件の未公開情報を扱うとメモリ機能やコンテキスト保持で情報混在。金商法上のチャイニーズウォール（情報障壁）がAI上で崩壊。インサイダー情報の漏洩に直結。物理的・システム的な情報障壁がAI上では機能しない可能性。",
       action:
@@ -158,15 +155,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "自社やクライアントの秘密情報をAIに入れることへの対策は？",
     options: [
-      { oid: "A4a", label: "入力フィルタリングで機密情報をブロック", score: 100 },
-      { oid: "A4b", label: "DLP設定やプラン設定で対策", score: 66 },
-      { oid: "A4c", label: "入力禁止ルールを策定し周知済み", score: 33 },
-      { oid: "A4d", label: "対策していない", score: 0 },
+      { oid: "A4a", label: "入力フィルタリングで機密情報をブロック", level: 3 },
+      { oid: "A4b", label: "DLP設定やプラン設定で対策", level: 2 },
+      { oid: "A4c", label: "入力禁止ルールを策定し周知済み", level: 1 },
+      { oid: "A4d", label: "対策していない", level: 0 },
     ],
     legal: "不競法",
     industries: ["all"],
     alwaysShow: true,
-    targetScore: 100,
     insight: {
       risk: "営業秘密をAIに入力すると秘密管理性が失われ不競法上の保護を主張できなくなる。特にコンシューマープラン（トレーニング利用あり）での入力は秘密管理性の喪失に直結。戦略・ノウハウ・未公開財務情報が該当。",
       action:
@@ -206,15 +202,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIに入れたデータが、AIの学習に使われない設定になっていますか？",
     options: [
-      { oid: "A5a", label: "Business/Enterpriseプランで学習利用OFF確認済み", score: 100 },
-      { oid: "A5b", label: "設定でオプトアウト済み", score: 66 },
-      { oid: "A5c", label: "ポリシーは確認したが設定未変更", score: 33 },
-      { oid: "A5d", label: "確認していない", score: 0 },
+      { oid: "A5a", label: "Business/Enterpriseプランで学習利用OFF確認済み", level: 3 },
+      { oid: "A5b", label: "設定でオプトアウト済み", level: 2 },
+      { oid: "A5c", label: "ポリシーは確認したが設定未変更", level: 1 },
+      { oid: "A5d", label: "確認していない", level: 0 },
     ],
     legal: "各ベンダーAUP",
     industries: ["all"],
     alwaysShow: true,
-    targetScore: 66,
     insight: {
       risk: "ChatGPTの無料・Plusプランでは入力データがモデルのトレーニングに使われる。業務データが学習に使われると他ユーザーへの回答に影響する可能性。Claudeも消費者向けはON、ビジネス向けはなし。",
       action:
@@ -253,15 +248,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "外部資料にAIを騙す指示が埋め込まれている攻撃への対策は？",
     options: [
-      { oid: "A6a", label: "技術的に検知・ブロックしている", score: 100 },
-      { oid: "A6b", label: "外部資料の入力経路を制限している", score: 66 },
-      { oid: "A6c", label: "リスクを周知し目視確認している", score: 33 },
-      { oid: "A6d", label: "対策していない・知らない", score: 0 },
+      { oid: "A6a", label: "技術的に検知・ブロックしている", level: 3 },
+      { oid: "A6b", label: "外部資料の入力経路を制限している", level: 2 },
+      { oid: "A6c", label: "リスクを周知し目視確認している", level: 1 },
+      { oid: "A6d", label: "対策していない・知らない", level: 0 },
     ],
     legal: "各ベンダーAUP",
     industries: ["all"],
     alwaysShow: false,
-    targetScore: 66,
     insight: {
       risk: "外部資料にAIを騙す指示が埋め込まれていると安全機能が無効化され本来出力すべきでない情報を出力する可能性。M&A業務ではDD資料等の外部文書を大量にAIに読み込ませるため特にリスクが高い。",
       action:
@@ -301,15 +295,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIに入れたデータがどの国のサーバーに保管されているか把握していますか？",
     options: [
-      { oid: "A7a", label: "保管先を把握しデータリージョンも指定", score: 100 },
-      { oid: "A7b", label: "保管先の国・地域を把握している", score: 66 },
-      { oid: "A7c", label: "ベンダー名は知っているが保管先は未確認", score: 33 },
-      { oid: "A7d", label: "考えたことがない", score: 0 },
+      { oid: "A7a", label: "保管先を把握しデータリージョンも指定", level: 3 },
+      { oid: "A7b", label: "保管先の国・地域を把握している", level: 2 },
+      { oid: "A7c", label: "ベンダー名は知っているが保管先は未確認", level: 1 },
+      { oid: "A7d", label: "考えたことがない", level: 0 },
     ],
     legal: "個情法28条",
     industries: ["all"],
     alwaysShow: true,
-    targetScore: 100,
     insight: {
       risk: "ChatGPTやCopilotのデータは海外サーバーに保管。個情法では外国への第三者提供に本人同意または適切な体制確認が必要。個人情報保護委員会の「外的環境の把握」義務への対応が必要。",
       action:
@@ -348,15 +341,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "他社のレポートや記事をAIに入れて分析させることへの対策は？",
     options: [
-      { oid: "A8a", label: "入力元を社内データに限定し外部著作物を制御", score: 100 },
-      { oid: "A8b", label: "著作物の入力に関するルールがある", score: 66 },
-      { oid: "A8c", label: "注意喚起はしているが明文化されていない", score: 33 },
-      { oid: "A8d", label: "特に意識していない", score: 0 },
+      { oid: "A8a", label: "入力元を社内データに限定し外部著作物を制御", level: 3 },
+      { oid: "A8b", label: "著作物の入力に関するルールがある", level: 2 },
+      { oid: "A8c", label: "注意喚起はしているが明文化されていない", level: 1 },
+      { oid: "A8d", label: "特に意識していない", level: 0 },
     ],
     legal: "著作権法30条の4",
     industries: ["all"],
     alwaysShow: false,
-    targetScore: 66,
     insight: {
       risk: "他社レポートや記事をAIに入力して要約・分析させる場合、著作権法上の「享受目的」との併存が問題になる可能性。特定のクリエイターや作品名をプロンプトに入力すると依拠性が認められやすい。文化庁ガイドラインで整理されている。",
       action:
@@ -395,15 +387,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "健康情報・犯罪歴・人種等のセンシティブな情報がAIに入力されるリスクへの対策は？",
     options: [
-      { oid: "A9a", label: "技術的にセンシティブ情報を検知・ブロック", score: 100 },
-      { oid: "A9b", label: "入力禁止ルールがあり周知済み", score: 66 },
-      { oid: "A9c", label: "注意喚起はしている", score: 33 },
-      { oid: "A9d", label: "特に意識していない", score: 0 },
+      { oid: "A9a", label: "技術的にセンシティブ情報を検知・ブロック", level: 3 },
+      { oid: "A9b", label: "入力禁止ルールがあり周知済み", level: 2 },
+      { oid: "A9c", label: "注意喚起はしている", level: 1 },
+      { oid: "A9d", label: "特に意識していない", level: 0 },
     ],
     legal: "個情法20条",
     industries: ["all"],
     alwaysShow: false,
-    targetScore: 100,
     insight: {
       risk: "要配慮個人情報（病歴・犯罪歴・人種等）の取得は原則本人同意が必要。AI学習時のクローリングで要配慮個人情報が混入するリスクもある。個人情報保護委員会は収集時・加工前・発見時の3段階での対策を要請している。",
       action:
@@ -443,15 +434,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIに聞いてはいけないトピック（競合推奨、投資助言等）を定義していますか？",
     options: [
-      { oid: "A10a", label: "AIの設定で禁止トピックをブロック済み", score: 100 },
-      { oid: "A10b", label: "禁止トピックリストを作成し設定に反映", score: 66 },
-      { oid: "A10c", label: "禁止トピックを口頭で周知", score: 33 },
-      { oid: "A10d", label: "定義していない", score: 0 },
+      { oid: "A10a", label: "AIの設定で禁止トピックをブロック済み", level: 3 },
+      { oid: "A10b", label: "禁止トピックリストを作成し設定に反映", level: 2 },
+      { oid: "A10c", label: "禁止トピックを口頭で周知", level: 1 },
+      { oid: "A10d", label: "定義していない", level: 0 },
     ],
     legal: "各ベンダーAUP + 業界規制",
     industries: ["all"],
     alwaysShow: false,
-    targetScore: 66,
     insight: {
       risk: "AIチャットボットが競合他社の製品を推奨したり、資格が必要な投資助言をAIが行ったりするリスク。金融業界では金商法上の投資助言業の無登録営業に該当し得る。医療業界では医師法違反のリスクも。",
       action:
@@ -491,15 +481,14 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIが生成した未公開情報を含む出力が、社外に送信されるリスクへの対策は？",
     options: [
-      { oid: "A11a", label: "出力に機密度ラベルを自動付与し高機密は送信ブロック", score: 100 },
-      { oid: "A11b", label: "メール送信時にDLPで機密キーワード検知", score: 66 },
-      { oid: "A11c", label: "社外送信前チェックルールを策定", score: 33 },
-      { oid: "A11d", label: "特に制御していない", score: 0 },
+      { oid: "A11a", label: "出力に機密度ラベルを自動付与し高機密は送信ブロック", level: 3 },
+      { oid: "A11b", label: "メール送信時にDLPで機密キーワード検知", level: 2 },
+      { oid: "A11c", label: "社外送信前チェックルールを策定", level: 1 },
+      { oid: "A11d", label: "特に制御していない", level: 0 },
     ],
     legal: "金商法全般",
     industries: ["ma", "finance"],
     alwaysShow: false,
-    targetScore: 100,
     insight: {
       risk: "AIが生成した戦略ドラフトや分析資料に未公開情報が含まれたまま社外に送信されるリスク。金商法の情報伝達規制に抵触する可能性。メール添付やチャット送信で意図せず流出するケースが想定される。",
       action:

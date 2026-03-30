@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import { AssessmentItemWithBoost, Profile, AnalyzeResult } from "@/types";
 import { AREAS, AREA_LABELS, AREA_COLORS, INDUSTRIES } from "@/data/items";
 import {
-  getItemScore,
-  getAreaScores,
-  getTotalScore,
-  scoreColor,
+  getItemLevel,
+  getAreaLevels,
+  getTotalLevel,
+  levelColor,
+  TARGET_LEVEL,
+  LEVEL_LABELS,
 } from "@/lib/scoring";
 import RadarChart from "./RadarChart";
 import RoadmapSection from "./RoadmapSection";
@@ -32,8 +34,8 @@ export default function StepResult({
   const [analysis, setAnalysis] = useState<AnalyzeResult | null>(null);
   const [downloading, setDownloading] = useState(false);
 
-  const areaScores = getAreaScores(items, answers);
-  const totalScore = getTotalScore(items, answers);
+  const areaLevels = getAreaLevels(items, answers);
+  const totalLevel = getTotalLevel(items, answers);
 
   // Fetch LLM analysis on mount
   useEffect(() => {
@@ -48,15 +50,15 @@ export default function StepResult({
               id: i.id,
               title: i.title,
               area: i.area,
-              score: getItemScore(i, answers),
+              level: getItemLevel(i, answers),
               answer:
                 i.options.find((o) => o.oid === answers[i.id])?.label || "",
               note: notes[i.id] || "",
               legal: i.legal,
               insight: i.insight,
             })),
-            areaScores,
-            totalScore,
+            areaLevels,
+            totalLevel,
           }),
         });
         const data = await res.json();
@@ -80,18 +82,18 @@ export default function StepResult({
             id: i.id,
             title: i.title,
             area: i.area,
-            score: getItemScore(i, answers),
+            level: getItemLevel(i, answers),
             answer:
               i.options.find((o) => o.oid === answers[i.id])?.label || "",
             note: notes[i.id] || "",
             legal: i.legal,
             insight: i.insight,
           })),
-          areaScores,
-          totalScore,
+          areaLevels,
+          totalLevel,
           summary:
             analysis?.summary ||
-            `総合スコアは${totalScore}%です。`,
+            `全体の平均レベルはLv.${totalLevel}です。`,
           email,
         }),
       });
@@ -126,7 +128,7 @@ export default function StepResult({
       <div className="max-w-3xl mx-auto">
         <h2 className="text-2xl font-bold text-slate-900 mb-6">診断結果</h2>
 
-        {/* Area score cards */}
+        {/* Area level cards */}
         <div className="grid grid-cols-3 gap-3 mb-5">
           {AREAS.map((area) => (
             <div
@@ -143,19 +145,13 @@ export default function StepResult({
                 </span>
               </div>
               <div
-                className="text-3xl font-bold"
-                style={{ color: scoreColor(areaScores[area]) }}
+                className="text-2xl font-bold"
+                style={{ color: levelColor(areaLevels[area]) }}
               >
-                {areaScores[area]}%
+                Lv.{areaLevels[area]}
               </div>
-              <div className="bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{
-                    width: `${areaScores[area]}%`,
-                    backgroundColor: scoreColor(areaScores[area]),
-                  }}
-                />
+              <div className="text-[10px] text-slate-400 mt-1">
+                推奨: Lv.{TARGET_LEVEL}（{LEVEL_LABELS[TARGET_LEVEL]}）
               </div>
             </div>
           ))}
@@ -165,15 +161,15 @@ export default function StepResult({
         <div className="bg-white rounded-xl border border-slate-200 p-5 mb-5">
           <p className="text-sm text-slate-700 leading-relaxed">
             {analysis?.summary ||
-              `総合スコアは${totalScore}%です。${
-                areaScores.ops < 30
+              `全体の平均レベルはLv.${totalLevel}です。${
+                areaLevels.ops < 1
                   ? "運用・管理面の整備が急務です。"
                   : ""
               }${
-                areaScores.output < 40
+                areaLevels.output < 1
                   ? "出力側のチェック体制にギャップがあります。"
                   : ""
-              }まずルール策定と環境設定から着手し、エージェント化による技術的な対策を検討されることを推奨します。`}
+              }推奨レベルはLv.2（仕組み化）です。まずルール策定と環境設定から着手し、技術的な制御の導入を検討されることを推奨します。`}
           </p>
         </div>
 
@@ -181,8 +177,8 @@ export default function StepResult({
         <div className="bg-white rounded-xl border border-slate-200 p-4 mb-5">
           <RadarChart
             labels={items.map((i) => i.title)}
-            data={items.map((i) => getItemScore(i, answers))}
-            target={items.map((i) => i.targetScore)}
+            data={items.map((i) => getItemLevel(i, answers))}
+            target={items.map(() => TARGET_LEVEL)}
           />
         </div>
 
@@ -203,7 +199,7 @@ export default function StepResult({
               </div>
 
               {areaItems.map((item) => {
-                const score = getItemScore(item, answers);
+                const lvl = getItemLevel(item, answers);
                 const isExpanded = expanded === item.id;
                 const selectedOption = item.options.find(
                   (o) => o.oid === answers[item.id]
@@ -223,16 +219,16 @@ export default function StepResult({
                     >
                       <div
                         className="w-2.5 h-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: scoreColor(score) }}
+                        style={{ backgroundColor: levelColor(lvl) }}
                       />
                       <span className="flex-1 text-sm text-slate-700">
                         {item.title}
                       </span>
                       <span
-                        className="text-xs font-medium"
-                        style={{ color: scoreColor(score) }}
+                        className="text-xs font-medium px-1.5 py-0.5 rounded"
+                        style={{ color: levelColor(lvl) }}
                       >
-                        {score}点
+                        Lv.{lvl}
                       </span>
                       <span
                         className={`text-[10px] text-slate-400 transition-transform ${
@@ -250,7 +246,7 @@ export default function StepResult({
                           {notes[item.id] && ` / ${notes[item.id]}`}
                         </div>
 
-                        {score < 75 && insight?.risk && (
+                        {lvl < TARGET_LEVEL && insight?.risk && (
                           <div className="bg-red-50 rounded-lg p-3 mb-2">
                             <div className="font-semibold text-red-900 text-[11px] mb-1">
                               リスク
@@ -261,7 +257,7 @@ export default function StepResult({
                           </div>
                         )}
 
-                        {score < 75 && insight?.action && (
+                        {lvl < TARGET_LEVEL && insight?.action && (
                           <div className="bg-blue-50 rounded-lg p-3 mb-2">
                             <div className="font-semibold text-blue-900 text-[11px] mb-1">
                               推奨アクション
@@ -272,7 +268,7 @@ export default function StepResult({
                           </div>
                         )}
 
-                        {score < 75 && insight?.agent && (
+                        {lvl < TARGET_LEVEL && insight?.agent && (
                           <div className="bg-emerald-50 rounded-lg p-3 mb-2">
                             <div className="font-semibold text-emerald-900 text-[11px] mb-1">
                               エージェント化
@@ -283,7 +279,7 @@ export default function StepResult({
                           </div>
                         )}
 
-                        {score >= 75 && (
+                        {lvl >= TARGET_LEVEL && (
                           <div className="bg-emerald-50 rounded-lg p-3">
                             <div className="text-emerald-800 text-sm">
                               現在の対策を維持してください。
@@ -292,7 +288,7 @@ export default function StepResult({
                         )}
 
                         {/* 4段階ロードマップ */}
-                        {score < 75 && item.insight?.roadmap && (
+                        {lvl < TARGET_LEVEL && item.insight?.roadmap && (
                           <div className="mt-3 border border-slate-200 rounded-lg overflow-hidden">
                             <div className="bg-slate-50 px-3 py-2">
                               <span className="text-[11px] font-semibold text-slate-700">4段階ロードマップ</span>

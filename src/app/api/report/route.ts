@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { profile, items, areaScores, totalScore, summary, email } =
+  const { profile, items, areaLevels, totalLevel, summary, email } =
     await request.json();
 
   const AREA_LABELS: Record<string, string> = {
@@ -20,13 +20,13 @@ export async function POST(request: NextRequest) {
   lines.push(`ユースケース: ${profile.useCases}`);
   lines.push("");
   lines.push("-".repeat(60));
-  lines.push("  第1部：総合スコアとサマリ");
+  lines.push("  第1部：成熟度レベルとサマリ");
   lines.push("-".repeat(60));
   lines.push("");
-  lines.push(`総合スコア: ${totalScore}%`);
-  lines.push(`  入力側: ${areaScores.input}%`);
-  lines.push(`  出力側: ${areaScores.output}%`);
-  lines.push(`  運用・管理: ${areaScores.ops}%`);
+  lines.push(`全体平均: Lv.${totalLevel}（推奨: Lv.2 仕組み化）`);
+  lines.push(`  入力側: Lv.${areaLevels.input}`);
+  lines.push(`  出力側: Lv.${areaLevels.output}`);
+  lines.push(`  運用・管理: Lv.${areaLevels.ops}`);
   lines.push("");
   lines.push(`所見: ${summary}`);
   lines.push("");
@@ -44,13 +44,13 @@ export async function POST(request: NextRequest) {
     lines.push("");
 
     areaItems.forEach((item: any) => {
-      const badge =
-        item.score >= 75 ? "[OK]" : item.score >= 40 ? "[注意]" : "[要対策]";
-      lines.push(`  ${badge} ${item.title} [${item.score}点]`);
+      const LEVEL_NAMES: Record<number, string> = { 0: "未対策", 1: "ルール化", 2: "仕組み化", 3: "構造的防止" };
+      const badge = item.level >= 2 ? "[OK]" : item.level >= 1 ? "[注意]" : "[要対策]";
+      lines.push(`  ${badge} ${item.title} [Lv.${item.level}: ${LEVEL_NAMES[item.level] || "不明"}]`);
       lines.push(`  現状: ${item.answer}`);
       if (item.note) lines.push(`  補足: ${item.note}`);
 
-      if (item.score < 75) {
+      if (item.level < 2) {
         if (item.insight?.risk)
           lines.push(`  リスク: ${item.insight.risk}`);
         if (item.insight?.action)

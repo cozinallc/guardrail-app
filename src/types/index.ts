@@ -3,7 +3,7 @@ export type Area = "input" | "output" | "ops";
 export interface Option {
   oid: string;
   label: string;
-  score: number;
+  level: number; // 0=未対策, 1=ルール化, 2=仕組み化, 3=構造的防止
 }
 
 export interface RoadmapLevel {
@@ -35,7 +35,6 @@ export interface AssessmentItem {
   legal: string;
   industries: string[];
   alwaysShow: boolean;   // trueなら業界・ユースケースに関係なく常に表示
-  targetScore: number;   // 推奨レベル（100=必須, 66=推奨, 33=将来検討）
   insight: Insight;
 }
 

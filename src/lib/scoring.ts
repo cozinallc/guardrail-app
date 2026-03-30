@@ -1,22 +1,28 @@
 import { AssessmentItem, AssessmentItemWithBoost, AreaScore } from "@/types";
 import { ITEMS, UC_BOOST, AREAS } from "@/data/items";
 
+// 推奨レベル（全項目統一）
+export const TARGET_LEVEL = 2;
+
+// レベル名称
+export const LEVEL_LABELS: Record<number, string> = {
+  0: "未対策",
+  1: "ルール化",
+  2: "仕組み化",
+  3: "構造的防止",
+};
+
 /**
  * 業界 + ユースケースで項目をフィルタリング
- * - 業界に該当する項目のうち
- * - alwaysShow=true の項目は常に表示
- * - それ以外はUC_BOOSTでマッチした項目のみ表示
  */
 export function getFilteredItems(
   industry: string,
   useCases: string
 ): AssessmentItem[] {
-  // 業界フィルタ
   const industryFiltered = ITEMS.filter(
     (i) => i.industries.includes("all") || i.industries.includes(industry)
   );
 
-  // ユースケースからブースト対象IDを取得
   const boostedIds = new Set<string>();
   if (useCases) {
     Object.entries(UC_BOOST).forEach(([kw, ids]) => {
@@ -24,7 +30,6 @@ export function getFilteredItems(
     });
   }
 
-  // alwaysShow=true OR ブースト対象の項目のみ返す
   return industryFiltered.filter(
     (i) => i.alwaysShow || boostedIds.has(i.id)
   );
@@ -43,43 +48,55 @@ export function applyBoost(
   return items.map((i) => ({ ...i, boosted: boosted.has(i.id) }));
 }
 
-export function getItemScore(
+/**
+ * 項目の現在レベルを取得（0〜3）
+ */
+export function getItemLevel(
   item: AssessmentItem,
   answers: Record<string, string>
 ): number {
   const opt = item.options.find((o) => o.oid === answers[item.id]);
-  return opt ? opt.score : 0;
+  return opt ? opt.level : 0;
 }
 
-export function getAreaScores(
+/**
+ * 領域ごとの平均レベル（小数1桁）
+ */
+export function getAreaLevels(
   items: AssessmentItem[],
   answers: Record<string, string>
 ): AreaScore {
-  const scores: AreaScore = { input: 0, output: 0, ops: 0 };
+  const levels: AreaScore = { input: 0, output: 0, ops: 0 };
   AREAS.forEach((area) => {
     const areaItems = items.filter((i) => i.area === area);
     if (areaItems.length > 0) {
-      scores[area] = Math.round(
-        areaItems.reduce((s, i) => s + getItemScore(i, answers), 0) /
-          areaItems.length
-      );
+      const avg =
+        areaItems.reduce((s, i) => s + getItemLevel(i, answers), 0) /
+        areaItems.length;
+      levels[area] = Math.round(avg * 10) / 10; // 小数1桁
     }
   });
-  return scores;
+  return levels;
 }
 
-export function getTotalScore(
+/**
+ * 全体の平均レベル（小数1桁）
+ */
+export function getTotalLevel(
   items: AssessmentItem[],
   answers: Record<string, string>
 ): number {
   if (items.length === 0) return 0;
-  return Math.round(
-    items.reduce((s, i) => s + getItemScore(i, answers), 0) / items.length
-  );
+  const avg =
+    items.reduce((s, i) => s + getItemLevel(i, answers), 0) / items.length;
+  return Math.round(avg * 10) / 10;
 }
 
-export function scoreColor(score: number): string {
-  if (score >= 75) return "#059669";
-  if (score >= 40) return "#d97706";
-  return "#dc2626";
+/**
+ * レベルに基づく色
+ */
+export function levelColor(level: number): string {
+  if (level >= 2) return "#059669"; // 緑: 仕組み化以上
+  if (level >= 1) return "#d97706"; // 黄: ルール化
+  return "#dc2626";                 // 赤: 未対策
 }

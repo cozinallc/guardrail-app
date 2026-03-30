@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGeminiClient, isGeminiAvailable } from "@/lib/gemini";
-import { generateFallbackSummary, getFallbackInsights } from "@/lib/fallback";
+import { generateFallbackSummary } from "@/lib/fallback";
+import { TARGET_LEVEL, LEVEL_LABELS } from "@/lib/scoring";
 
 export async function POST(request: NextRequest) {
-  const { profile, items, areaScores, totalScore } = await request.json();
+  const { profile, items, areaLevels, totalLevel } = await request.json();
 
   // Always generate fallback first
-  const fallbackSummary = generateFallbackSummary(totalScore, areaScores);
+  const fallbackSummary = generateFallbackSummary(totalLevel, areaLevels);
   const fallbackInsights = items
-    .filter((i: any) => i.score < 75)
+    .filter((i: any) => i.level < TARGET_LEVEL)
     .map((i: any) => ({
       id: i.id,
       risk: i.insight?.risk || "",
@@ -23,22 +24,25 @@ export async function POST(request: NextRequest) {
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
       const itemsSummary = items
-        .filter((i: any) => i.score < 75)
+        .filter((i: any) => i.level < TARGET_LEVEL)
         .map(
           (i: any) =>
-            `- ${i.id} ${i.title}: ${i.score}点 (回答: ${i.answer})${i.note ? ` 補足: ${i.note}` : ""} [${i.legal}]`
+            `- ${i.id} ${i.title}: Lv.${i.level}（${LEVEL_LABELS[i.level] || "不明"}）(回答: ${i.answer})${i.note ? ` 補足: ${i.note}` : ""} [${i.legal}]`
         )
         .join("\n");
 
       const prompt = `あなたはAIガードレール診断の専門家です。
 以下の診断結果に基づき、JSONで回答してください。
 
+成熟度モデル: Lv.0=未対策、Lv.1=ルール化、Lv.2=仕組み化、Lv.3=構造的防止
+推奨レベル: Lv.2（仕組み化）
+
 業界: ${profile.industry}
 ユースケース: ${profile.useCases}
-総合スコア: ${totalScore}%
-領域別: 入力${areaScores.input}% / 出力${areaScores.output}% / 運用${areaScores.ops}%
+全体平均: Lv.${totalLevel}
+領域別: 入力Lv.${areaLevels.input} / 出力Lv.${areaLevels.output} / 運用Lv.${areaLevels.ops}
 
-スコア75未満の項目:
+推奨レベル未満の項目:
 ${itemsSummary}
 
 以下のJSON形式で出力してください（余計な説明不要、JSONのみ）:
@@ -56,7 +60,6 @@ ${itemsSummary}
 
       const result = await model.generateContent(prompt);
       const text = result.response.text().trim();
-      // Extract JSON from response
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[0]);
@@ -67,7 +70,6 @@ ${itemsSummary}
     }
   }
 
-  // Return fallback
   return NextResponse.json({
     summary: fallbackSummary,
     items: fallbackInsights,

@@ -89,7 +89,7 @@ export default function StepAssessment({
                         onClick={() =>
                           setAnswers({ ...answers, [item.id]: opt.oid })
                         }
-                        className={`p-2.5 rounded-lg text-sm text-left transition-colors ${
+                        className={`p-2.5 rounded-lg text-sm text-left transition-colors flex items-center gap-2 ${
                           answers[item.id] === opt.oid
                             ? "border-2 font-medium"
                             : "border border-slate-200 text-slate-600 hover:border-slate-300"
@@ -104,7 +104,8 @@ export default function StepAssessment({
                             : {}
                         }
                       >
-                        {opt.label}
+                        <span className="text-[10px] font-mono text-slate-400 shrink-0 w-8">Lv.{opt.level}</span>
+                        <span>{opt.label}</span>
                       </button>
                     ))}
                   </div>

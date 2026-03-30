@@ -32,7 +32,8 @@ export default function RadarChart({ labels, data, target }: Props) {
         />
         <PolarRadiusAxis
           angle={90}
-          domain={[0, 100]}
+          domain={[0, 3]}
+          tickCount={4}
           tick={{ fontSize: 9, fill: "#94a3b8" }}
         />
         <Radar
