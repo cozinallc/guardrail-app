@@ -10,7 +10,7 @@ export const INPUT_ITEMS: AssessmentItem[] = [
       "ノンネームシートや資料に含まれる人名・連絡先を、そのままAIに入れてしまうリスクへの対策は？",
     options: [
       { oid: "A1a", label: "入力時にPIIを自動検知・ブロックしている", level: 3 },
-      { oid: "A1b", label: "トレーニング利用OFF等の環境設定で対策", level: 2 },
+      { oid: "A1b", label: "入力前にマスキング・匿名化する仕組みを導入しトレーニング利用もOFF", level: 2 },
       { oid: "A1c", label: "入力禁止ルールを策定し周知済み", level: 1 },
       { oid: "A1d", label: "対策していない", level: 0 },
     ],
@@ -202,9 +202,9 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIに入れたデータが、AIの学習に使われない設定になっていますか？",
     options: [
-      { oid: "A5a", label: "Business/Enterpriseプランで学習利用OFF確認済み", level: 3 },
-      { oid: "A5b", label: "設定でオプトアウト済み", level: 2 },
-      { oid: "A5c", label: "ポリシーは確認したが設定未変更", level: 1 },
+      { oid: "A5a", label: "エージェント経由に限定しデータ経路を完全管理", level: 3 },
+      { oid: "A5b", label: "Business/Enterpriseプランで学習利用OFF確認済み", level: 2 },
+      { oid: "A5c", label: "データポリシーを確認しルールを策定", level: 1 },
       { oid: "A5d", label: "確認していない", level: 0 },
     ],
     legal: "各ベンダーAUP",
@@ -295,9 +295,9 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIに入れたデータがどの国のサーバーに保管されているか把握していますか？",
     options: [
-      { oid: "A7a", label: "保管先を把握しデータリージョンも指定", level: 3 },
-      { oid: "A7b", label: "保管先の国・地域を把握している", level: 2 },
-      { oid: "A7c", label: "ベンダー名は知っているが保管先は未確認", level: 1 },
+      { oid: "A7a", label: "データレジデンシー要件を満たすプライベート環境で完全管理", level: 3 },
+      { oid: "A7b", label: "保管先を把握しデータリージョンを指定", level: 2 },
+      { oid: "A7c", label: "保管先の国・地域を一覧表で把握", level: 1 },
       { oid: "A7d", label: "考えたことがない", level: 0 },
     ],
     legal: "個情法28条",
@@ -388,8 +388,8 @@ export const INPUT_ITEMS: AssessmentItem[] = [
       "健康情報・犯罪歴・人種等のセンシティブな情報がAIに入力されるリスクへの対策は？",
     options: [
       { oid: "A9a", label: "技術的にセンシティブ情報を検知・ブロック", level: 3 },
-      { oid: "A9b", label: "入力禁止ルールがあり周知済み", level: 2 },
-      { oid: "A9c", label: "注意喚起はしている", level: 1 },
+      { oid: "A9b", label: "入力フォームにセンシティブデータの検知・警告を導入", level: 2 },
+      { oid: "A9c", label: "入力禁止ルールを策定し周知", level: 1 },
       { oid: "A9d", label: "特に意識していない", level: 0 },
     ],
     legal: "個情法20条",

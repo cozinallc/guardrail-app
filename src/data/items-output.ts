@@ -10,7 +10,7 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
       "AIの出力に実在しないデータや間違った数字が含まれるリスクへの対策は？",
     options: [
       { oid: "B1a", label: "出力に情報源を強制表示し全件人間確認", level: 3 },
-      { oid: "B1b", label: "重要な出力は人間が確認するルール", level: 2 },
+      { oid: "B1b", label: "AI出力に「要確認」ラベルを自動付与し確認フローを整備", level: 2 },
       { oid: "B1c", label: "注意喚起はしているが徹底されていない", level: 1 },
       { oid: "B1d", label: "そのまま使うことが多い", level: 0 },
     ],
@@ -99,9 +99,9 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIが「見送り」と判断したとき、人間が改めて判断していますか？",
     options: [
-      { oid: "B3a", label: "判断記録システムで人間判断の証跡を保存", level: 3 },
-      { oid: "B3b", label: "最終判断は人間が行うルールを明文化", level: 2 },
-      { oid: "B3c", label: "暗黙の了解だが明文化されていない", level: 1 },
+      { oid: "B3a", label: "システムで人間承認を必須化しAI判断のみでは処理不可に", level: 3 },
+      { oid: "B3b", label: "判断フローに人間承認ステップを組み込み記録を自動保存", level: 2 },
+      { oid: "B3c", label: "最終判断は人間が行うルールを明文化", level: 1 },
       { oid: "B3d", label: "AIの判断をそのまま使うこともある", level: 0 },
     ],
     legal: "AI事業者GL・会社法",
