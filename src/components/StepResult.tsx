@@ -1,0 +1,348 @@
+"use client";
+import { useState, useEffect } from "react";
+import { AssessmentItemWithBoost, Profile, AnalyzeResult } from "@/types";
+import { AREAS, AREA_LABELS, AREA_COLORS, INDUSTRIES } from "@/data/items";
+import {
+  getItemScore,
+  getAreaScores,
+  getTotalScore,
+  scoreColor,
+} from "@/lib/scoring";
+import RadarChart from "./RadarChart";
+import RoadmapSection from "./RoadmapSection";
+import CTASection from "./CTASection";
+
+interface Props {
+  items: AssessmentItemWithBoost[];
+  answers: Record<string, string>;
+  notes: Record<string, string>;
+  profile: Profile;
+  onReset: () => void;
+}
+
+export default function StepResult({
+  items,
+  answers,
+  notes,
+  profile,
+  onReset,
+}: Props) {
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [analysis, setAnalysis] = useState<AnalyzeResult | null>(null);
+  const [downloading, setDownloading] = useState(false);
+
+  const areaScores = getAreaScores(items, answers);
+  const totalScore = getTotalScore(items, answers);
+
+  // Fetch LLM analysis on mount
+  useEffect(() => {
+    async function fetchAnalysis() {
+      try {
+        const res = await fetch("/api/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            profile,
+            items: items.map((i) => ({
+              id: i.id,
+              title: i.title,
+              area: i.area,
+              score: getItemScore(i, answers),
+              answer:
+                i.options.find((o) => o.oid === answers[i.id])?.label || "",
+              note: notes[i.id] || "",
+              legal: i.legal,
+              insight: i.insight,
+            })),
+            areaScores,
+            totalScore,
+          }),
+        });
+        const data = await res.json();
+        setAnalysis(data);
+      } catch {
+        // Use fallback if API fails
+      }
+    }
+    fetchAnalysis();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      const res = await fetch("/api/report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          profile,
+          items: items.map((i) => ({
+            id: i.id,
+            title: i.title,
+            area: i.area,
+            score: getItemScore(i, answers),
+            answer:
+              i.options.find((o) => o.oid === answers[i.id])?.label || "",
+            note: notes[i.id] || "",
+            legal: i.legal,
+            insight: i.insight,
+          })),
+          areaScores,
+          totalScore,
+          summary:
+            analysis?.summary ||
+            `総合スコアは${totalScore}%です。`,
+          email,
+        }),
+      });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "AI_Guardrail_Report.pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error("PDF download failed:", e);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  // Get insight for an item - prefer LLM analysis, fallback to hardcoded
+  const getInsight = (itemId: string) => {
+    if (analysis?.items) {
+      const llmInsight = analysis.items.find((i) => i.id === itemId);
+      if (llmInsight) return llmInsight;
+    }
+    const item = items.find((i) => i.id === itemId);
+    return item?.insight || null;
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 py-10 px-6">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">診断結果</h2>
+
+        {/* Area score cards */}
+        <div className="grid grid-cols-3 gap-3 mb-5">
+          {AREAS.map((area) => (
+            <div
+              key={area}
+              className="bg-white rounded-xl border border-slate-200 p-4"
+            >
+              <div className="flex items-center gap-1.5 mb-2">
+                <div
+                  className="w-1 h-4 rounded"
+                  style={{ backgroundColor: AREA_COLORS[area] }}
+                />
+                <span className="text-xs font-semibold text-slate-600">
+                  {AREA_LABELS[area]}
+                </span>
+              </div>
+              <div
+                className="text-3xl font-bold"
+                style={{ color: scoreColor(areaScores[area]) }}
+              >
+                {areaScores[area]}%
+              </div>
+              <div className="bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{
+                    width: `${areaScores[area]}%`,
+                    backgroundColor: scoreColor(areaScores[area]),
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Summary */}
+        <div className="bg-white rounded-xl border border-slate-200 p-5 mb-5">
+          <p className="text-sm text-slate-700 leading-relaxed">
+            {analysis?.summary ||
+              `総合スコアは${totalScore}%です。${
+                areaScores.ops < 30
+                  ? "運用・管理面の整備が急務です。"
+                  : ""
+              }${
+                areaScores.output < 40
+                  ? "出力側のチェック体制にギャップがあります。"
+                  : ""
+              }まずルール策定と環境設定から着手し、エージェント化による技術的な対策を検討されることを推奨します。`}
+          </p>
+        </div>
+
+        {/* Radar chart */}
+        <div className="bg-white rounded-xl border border-slate-200 p-4 mb-5">
+          <RadarChart
+            labels={items.map((i) => i.title)}
+            data={items.map((i) => getItemScore(i, answers))}
+            target={items.map(() => 100)}
+          />
+        </div>
+
+        {/* Item details */}
+        {AREAS.map((area) => {
+          const areaItems = items.filter((i) => i.area === area);
+          if (!areaItems.length) return null;
+          return (
+            <div key={area} className="mb-5">
+              <div className="flex items-center gap-2 mb-3">
+                <div
+                  className="w-1 h-5 rounded"
+                  style={{ backgroundColor: AREA_COLORS[area] }}
+                />
+                <h3 className="text-base font-semibold text-slate-900">
+                  {AREA_LABELS[area]}
+                </h3>
+              </div>
+
+              {areaItems.map((item) => {
+                const score = getItemScore(item, answers);
+                const isExpanded = expanded === item.id;
+                const selectedOption = item.options.find(
+                  (o) => o.oid === answers[item.id]
+                );
+                const insight = getInsight(item.id);
+
+                return (
+                  <div
+                    key={item.id}
+                    className="mb-1 rounded-xl border border-slate-200 bg-white overflow-hidden"
+                  >
+                    <button
+                      onClick={() =>
+                        setExpanded(isExpanded ? null : item.id)
+                      }
+                      className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-slate-50 transition-colors"
+                    >
+                      <div
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: scoreColor(score) }}
+                      />
+                      <span className="flex-1 text-sm text-slate-700">
+                        {item.title}
+                      </span>
+                      <span
+                        className="text-xs font-medium"
+                        style={{ color: scoreColor(score) }}
+                      >
+                        {score}点
+                      </span>
+                      <span
+                        className={`text-[10px] text-slate-400 transition-transform ${
+                          isExpanded ? "rotate-180" : ""
+                        }`}
+                      >
+                        ▼
+                      </span>
+                    </button>
+
+                    {isExpanded && (
+                      <div className="px-4 pb-4 text-sm leading-relaxed">
+                        <div className="text-xs text-slate-500 mb-3">
+                          回答：{selectedOption?.label || "未回答"}
+                          {notes[item.id] && ` / ${notes[item.id]}`}
+                        </div>
+
+                        {score < 75 && insight?.risk && (
+                          <div className="bg-red-50 rounded-lg p-3 mb-2">
+                            <div className="font-semibold text-red-900 text-[11px] mb-1">
+                              リスク
+                            </div>
+                            <div className="text-red-800 text-sm">
+                              {insight.risk}
+                            </div>
+                          </div>
+                        )}
+
+                        {score < 75 && insight?.action && (
+                          <div className="bg-blue-50 rounded-lg p-3 mb-2">
+                            <div className="font-semibold text-blue-900 text-[11px] mb-1">
+                              推奨アクション
+                            </div>
+                            <div className="text-blue-800 text-sm">
+                              {insight.action}
+                            </div>
+                          </div>
+                        )}
+
+                        {score < 75 && insight?.agent && (
+                          <div className="bg-emerald-50 rounded-lg p-3 mb-2">
+                            <div className="font-semibold text-emerald-900 text-[11px] mb-1">
+                              エージェント化
+                            </div>
+                            <div className="text-emerald-800 text-sm">
+                              {insight.agent}
+                            </div>
+                          </div>
+                        )}
+
+                        {score >= 75 && (
+                          <div className="bg-emerald-50 rounded-lg p-3">
+                            <div className="text-emerald-800 text-sm">
+                              現在の対策を維持してください。
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="text-[10px] text-slate-400 mt-2">
+                          {item.legal}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+
+        {/* Roadmap */}
+        <RoadmapSection />
+
+        {/* PDF Download */}
+        <div className="bg-white rounded-xl border border-slate-200 p-5 mb-5">
+          <h3 className="text-sm font-semibold text-slate-900 mb-3">
+            レポートのダウンロード
+          </h3>
+          <div className="mb-4">
+            <label className="text-xs text-slate-500 block mb-2">
+              メールアドレス（任意）
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="example@company.com"
+              className="w-full p-3 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <button
+            onClick={handleDownload}
+            disabled={downloading}
+            className="w-full py-4 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {downloading ? "生成中..." : "レポートをダウンロード（PDF）"}
+          </button>
+        </div>
+
+        {/* CTA */}
+        <CTASection />
+
+        {/* Reset */}
+        <button
+          onClick={onReset}
+          className="w-full py-3 rounded-lg border border-slate-200 bg-white text-slate-500 text-sm hover:bg-slate-50 transition-colors"
+        >
+          最初からやり直す
+        </button>
+      </div>
+    </div>
+  );
+}
