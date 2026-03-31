@@ -9,8 +9,8 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "ノンネームシートや資料に含まれる人名・連絡先を、そのままAIに入れてしまうリスクへの対策は？",
     options: [
-      { oid: "A1a", label: "入力時にPIIを自動検知しマスキング・ブロック", level: 3 },
-      { oid: "A1b", label: "Businessプランに切替え、個人情報入力前の確認フローを整備", level: 2 },
+      { oid: "A1a", label: "入力時に個人情報を自動検知しブロック", level: 3 },
+      { oid: "A1b", label: "Businessプランで学習利用をOFFに設定", level: 2 },
       { oid: "A1c", label: "入力禁止ルールを策定し周知済み", level: 1 },
       { oid: "A1d", label: "対策していない", level: 0 },
     ],
@@ -156,7 +156,7 @@ export const INPUT_ITEMS: AssessmentItem[] = [
       "自社やクライアントの秘密情報をAIに入れることへの対策は？",
     options: [
       { oid: "A4a", label: "入力フィルタリングで機密情報をブロック", level: 3 },
-      { oid: "A4b", label: "DLP設定やプラン設定で対策", level: 2 },
+      { oid: "A4b", label: "Businessプランでデータ保護設定を有効化", level: 2 },
       { oid: "A4c", label: "入力禁止ルールを策定し周知済み", level: 1 },
       { oid: "A4d", label: "対策していない", level: 0 },
     ],
@@ -482,7 +482,7 @@ export const INPUT_ITEMS: AssessmentItem[] = [
       "AIが生成した未公開情報を含む出力が、社外に送信されるリスクへの対策は？",
     options: [
       { oid: "A11a", label: "出力に機密度ラベルを自動付与し高機密は送信ブロック", level: 3 },
-      { oid: "A11b", label: "メール送信時にDLPで機密キーワード検知", level: 2 },
+      { oid: "A11b", label: "メール送信時に機密キーワードを自動検知", level: 2 },
       { oid: "A11c", label: "社外送信前チェックルールを策定", level: 1 },
       { oid: "A11d", label: "特に制御していない", level: 0 },
     ],

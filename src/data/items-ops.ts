@@ -9,7 +9,7 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "問題が起きたとき「誰がいつ何をAIに聞いたか」を確認できますか？",
     options: [
-      { oid: "C1-a", label: "エージェント経由で全入出力を自動記録しSIEM連携", level: 3 },
+      { oid: "C1-a", label: "エージェント経由で全入出力をログ管理システムに自動記録", level: 3 },
       { oid: "C1-b", label: "管理コンソールで利用状況を定期確認し重要案件はログを保存", level: 2 },
       { oid: "C1-c", label: "重要案件でのAI利用時にメモを残す運用", level: 1 },
       { oid: "C1-d", label: "記録を残していない", level: 0 },
@@ -287,7 +287,7 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "権限のない従業員が自由にAIを利用し、機密情報にアクセスするリスクへの対策は？",
     options: [
-      { oid: "C7-a", label: "IAM/RBAC連携で全AIアクセスを統合管理", level: 3 },
+      { oid: "C7-a", label: "アクセス管理システムで全AIアクセスを統合管理", level: 3 },
       { oid: "C7-b", label: "役割ベースのアクセス制御を設計済み", level: 2 },
       { oid: "C7-c", label: "利用者の範囲は決めているが技術的制御なし", level: 1 },
       { oid: "C7-d", label: "アクセス管理をしていない", level: 0 },

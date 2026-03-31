@@ -55,7 +55,7 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
       "AIの出力をクライアントに見せるとき、別案件の情報が混ざっていないか確認していますか？",
     options: [
       { oid: "B2a", label: "出力フローに機密情報チェックを自動化", level: 3 },
-      { oid: "B2b", label: "社外提出前チェックリストを業務フローに組み込みダブルチェック体制を整備", level: 2 },
+      { oid: "B2b", label: "社外提出前のダブルチェック体制を整備", level: 2 },
       { oid: "B2c", label: "チェックルールはあるが徹底されていない", level: 1 },
       { oid: "B2d", label: "考えたことがない", level: 0 },
     ],
@@ -143,8 +143,8 @@ export const OUTPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "AIの出力に個人名や連絡先がそのまま含まれるリスクへの対策は？",
     options: [
-      { oid: "B4a", label: "出力時にPIIを自動マスキング", level: 3 },
-      { oid: "B4b", label: "社外提出前にチェックツール等で個人情報の有無を確認するフローを整備", level: 2 },
+      { oid: "B4a", label: "出力時に個人情報を自動マスキング", level: 3 },
+      { oid: "B4b", label: "社外提出前に個人情報の有無をチェックツールで確認", level: 2 },
       { oid: "B4c", label: "注意喚起はしている", level: 1 },
       { oid: "B4d", label: "確認していない", level: 0 },
     ],
