@@ -9,8 +9,8 @@ export const INPUT_ITEMS: AssessmentItem[] = [
     scenario:
       "ノンネームシートや資料に含まれる人名・連絡先を、そのままAIに入れてしまうリスクへの対策は？",
     options: [
-      { oid: "A1a", label: "入力時にPIIを自動検知・ブロックしている", level: 3 },
-      { oid: "A1b", label: "入力前にマスキング・匿名化する仕組みを導入しトレーニング利用もOFF", level: 2 },
+      { oid: "A1a", label: "入力時にPIIを自動検知しマスキング・ブロック", level: 3 },
+      { oid: "A1b", label: "Businessプランに切替え、個人情報入力前の確認フローを整備", level: 2 },
       { oid: "A1c", label: "入力禁止ルールを策定し周知済み", level: 1 },
       { oid: "A1d", label: "対策していない", level: 0 },
     ],
@@ -58,7 +58,7 @@ export const INPUT_ITEMS: AssessmentItem[] = [
       "まだ公表されていない買収計画や対象企業の情報をAIに入れることへの対策は？",
     options: [
       { oid: "A2a", label: "案件別環境で構造的に分離し入力制御", level: 3 },
-      { oid: "A2b", label: "Businessプランでトレーニング利用OFF・メモリOFF", level: 2 },
+      { oid: "A2b", label: "案件ごとにアカウント分離しメモリ機能をOFF", level: 2 },
       { oid: "A2c", label: "研修で周知している", level: 1 },
       { oid: "A2d", label: "対策していない", level: 0 },
     ],
@@ -342,8 +342,8 @@ export const INPUT_ITEMS: AssessmentItem[] = [
       "他社のレポートや記事をAIに入れて分析させることへの対策は？",
     options: [
       { oid: "A8a", label: "入力元を社内データに限定し外部著作物を制御", level: 3 },
-      { oid: "A8b", label: "著作物の入力に関するルールがある", level: 2 },
-      { oid: "A8c", label: "注意喚起はしているが明文化されていない", level: 1 },
+      { oid: "A8b", label: "社内データのみ参照する環境を整備し外部著作物の入力を制限", level: 2 },
+      { oid: "A8c", label: "著作物の入力に関するルールを策定し周知", level: 1 },
       { oid: "A8d", label: "特に意識していない", level: 0 },
     ],
     legal: "著作権法30条の4",

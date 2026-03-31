@@ -1,7 +1,7 @@
 import { AssessmentItem, AssessmentItemWithBoost, AreaScore } from "@/types";
 import { ITEMS, UC_BOOST, AREAS } from "@/data/items";
 
-// 推奨レベル（全項目統一）
+// 最低推奨レベル（全項目統一）
 export const TARGET_LEVEL = 2;
 
 // レベル名称

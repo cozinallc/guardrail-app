@@ -151,7 +151,7 @@ export default function StepResult({
                 Lv.{areaLevels[area]}
               </div>
               <div className="text-[10px] text-slate-400 mt-1">
-                推奨: Lv.{TARGET_LEVEL}（{LEVEL_LABELS[TARGET_LEVEL]}）
+                最低推奨: Lv.{TARGET_LEVEL}（{LEVEL_LABELS[TARGET_LEVEL]}）
               </div>
             </div>
           ))}

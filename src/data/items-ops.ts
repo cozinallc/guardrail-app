@@ -9,9 +9,9 @@ export const OPS_ITEMS: AssessmentItem[] = [
     scenario:
       "問題が起きたとき「誰がいつ何をAIに聞いたか」を確認できますか？",
     options: [
-      { oid: "C1-a", label: "全入出力を自動記録しSIEM連携で長期保管", level: 3 },
-      { oid: "C1-b", label: "エージェント経由で自動記録", level: 2 },
-      { oid: "C1-c", label: "ChatGPT/Copilotの履歴に依存", level: 1 },
+      { oid: "C1-a", label: "エージェント経由で全入出力を自動記録しSIEM連携", level: 3 },
+      { oid: "C1-b", label: "管理コンソールで利用状況を定期確認し重要案件はログを保存", level: 2 },
+      { oid: "C1-c", label: "重要案件でのAI利用時にメモを残す運用", level: 1 },
       { oid: "C1-d", label: "記録を残していない", level: 0 },
     ],
     legal: "AI事業者GL・金商法",
@@ -473,8 +473,8 @@ export const OPS_ITEMS: AssessmentItem[] = [
       "AIによる反社チェックで問題企業を見落とすリスクへの対策は？",
     options: [
       { oid: "C11-a", label: "専用反社チェックツール+AIの二重体制", level: 3 },
-      { oid: "C11-b", label: "AI結果を必ず人間が検証", level: 2 },
-      { oid: "C11-c", label: "AIの反社チェック結果をそのまま利用", level: 1 },
+      { oid: "C11-b", label: "複数のデータベースとAIを照合し人間が最終確認するフローを整備", level: 2 },
+      { oid: "C11-c", label: "AI結果を人間が確認するルールを策定", level: 1 },
       { oid: "C11-d", label: "AIで反社チェックはしていない", level: 0 },
     ],
     legal: "犯収法",
